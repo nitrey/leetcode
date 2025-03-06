@@ -21,3 +21,24 @@ pub fn find_missing_and_repeated_values(grid: Vec<Vec<i32>>) -> Vec<i32> {
     }
     vec![repeated_val, missing_val]
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_a() {
+        let input = vec![vec![1, 3], vec![2, 2]];
+        let result = find_missing_and_repeated_values(input);
+        assert_eq!(result[0], 2);
+        assert_eq!(result[1], 4);
+    }
+
+    #[test]
+    fn test_b() {
+        let input = vec![vec![9, 1, 7], vec![8, 9, 2], vec![3, 4, 6]];
+        let result = find_missing_and_repeated_values(input);
+        assert_eq!(result[0], 9);
+        assert_eq!(result[1], 5);
+    }
+}
