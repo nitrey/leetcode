@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub fn find_missing_and_repeated_values(grid: Vec<Vec<i32>>) -> Vec<i32> {
     let grid_size = grid.len() * grid.len();
     let mut is_found = vec![false; grid_size];
