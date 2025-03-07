@@ -134,4 +134,22 @@ impl LRUCache {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_a() {
+      let capacity = 2;
+      let mut cache = LRUCache::new(capacity);
+      cache.put(1, 1);
+      cache.put(2, 2);
+      assert_eq!(cache.get(1), 1);
+      cache.put(3, 3);
+      assert_eq!(cache.get(2), -1);
+      cache.put(4, 4);
+      assert_eq!(cache.get(1), -1);
+      assert_eq!(cache.get(3), 3);
+      assert_eq!(cache.get(4), 4);
+    }
 }
