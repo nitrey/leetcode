@@ -45,4 +45,93 @@ struct LRUCache {
     map: HashMap<i32, Rc<RefCell<Node>>>,
 }
 
+#[allow(dead_code)]
+impl LRUCache {
+
+    fn new(capacity: i32) -> Self {
+        LRUCache {
+            capacity: capacity as usize,
+            head: None,
+            tail: None,
+            map: HashMap::with_capacity(capacity as usize)
+        }
+    }
+    
+    fn get(&mut self, key: i32) -> i32 {
+        let existing = self.map.get(&key).and_then(|x| Some(Rc::clone(x)));
+        if let Some(node) = existing {
+            let value = RefCell::borrow(&node).value;
+            self.move_to_tail(&key, node);
+            value
+        } else {
+            -1
+        }
+    }
+
+    fn move_to_tail(&mut self, key: &i32, node: NodeRefCell) {
+        let (tail, next) = {
+            let tail = self.tail.clone();
+            let next = RefCell::borrow(&node).next.clone();
+            match (tail, next) {
+                (Some(t), Some(n)) => (t.clone(), n.clone()),
+                _ => return,
+            }
+        };
+        let tail_key = RefCell::borrow(&tail).key;
+        // let head_key: i32 = RefCell::borrow(&head).key;
+        if tail_key == *key {
+            // Already at the end
+            return;
+        }
+        if let Some(prev) = RefCell::borrow(&node).prev.clone() {
+            Node::connect(&prev, &next);            
+        } else {
+            // In this case the Node was a head
+            self.head = Some(next.clone());
+            RefCell::borrow_mut(&next).prev = None;
+        }
+        Node::connect(&tail, &node);
+        RefCell::borrow_mut(&node).next = None;
+        self.tail = Some(node);
+    }
+    
+    fn put(&mut self, key: i32, value: i32) {
+        let existing = self.map.get(&key).and_then(|x| Some(Rc::clone(x)));
+        match existing {
+            None => {
+                let new_node = Node::new(key, value).to_reference();
+                if self.map.len() == self.capacity {
+                    if self.capacity == 1 {
+                        let head = self.head.clone().unwrap();
+                        let key_to_remove = RefCell::borrow(&head).key;
+                        self.map.remove(&key_to_remove);
+                        self.head = None;
+                        self.tail = None;
+                    } else {
+                        let head = self.head.clone().unwrap();
+                        let key_to_remove = RefCell::borrow(&head).key;
+                        self.map.remove(&key_to_remove);
+                        let head_next = RefCell::borrow(&head).next.clone().unwrap();
+                        RefCell::borrow_mut(&head_next).prev = None;
+                        self.head = Some(head_next);                        
+                    }
+                }
+                if let Some(tail) = self.tail.clone() {
+                    RefCell::borrow_mut(&tail).next = Some(new_node.clone());
+                    RefCell::borrow_mut(&new_node).prev = Some(tail.clone());
+                    self.tail = Some(new_node.clone());
+                } else {
+                    self.head = Some(new_node.clone());
+                    self.tail = Some(new_node.clone());
+                }
+                self.map.insert(key, new_node);
+            },
+            Some(node) => {
+                RefCell::borrow_mut(&node).value = value;
+                self.move_to_tail(&key, node);
+            },
+        }
+    }
+}
+
 }
