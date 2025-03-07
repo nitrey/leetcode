@@ -37,4 +37,12 @@ impl Node {
     }
 }
 
+#[allow(dead_code)]
+struct LRUCache {
+    capacity: usize,
+    head: Option<Rc<RefCell<Node>>>,
+    tail: Option<Rc<RefCell<Node>>>,
+    map: HashMap<i32, Rc<RefCell<Node>>>,
+}
+
 }
