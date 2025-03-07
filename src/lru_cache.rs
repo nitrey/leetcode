@@ -11,3 +11,30 @@ struct Node {
     pub prev: Option<NodeRefCell>,
     pub next: Option<NodeRefCell>,
 }
+
+#[allow(dead_code)]
+impl Node {
+    fn new(key: i32, value: i32) -> Node {
+        Node { key, value, prev: None, next: None }
+    }
+
+    fn update_prev_next(self: &mut Self, prev: Option<NodeRefCell>, next: Option<NodeRefCell>) {
+        self.prev = prev;
+        self.next = next;
+    }
+
+    fn to_reference(self: Self) -> NodeRefCell {
+        Rc::new(
+            RefCell::new(
+                self
+            )
+        )
+    }
+
+    fn connect(prev: &NodeRefCell, next: &NodeRefCell) {
+        RefCell::borrow_mut(prev).next = Some(Rc::clone(next));
+        RefCell::borrow_mut(next).prev = Some(Rc::clone(prev));
+    }
+}
+
+}
