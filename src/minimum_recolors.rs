@@ -30,4 +30,12 @@ mod tests {
       let result = minimum_recolors(blocks, k);
       assert_eq!(result, 3);
     }
+
+    #[test]
+    fn test_b() {
+      let blocks = "WBWBBBW".to_string();
+      let k = 2;
+      let result = minimum_recolors(blocks, k);
+      assert_eq!(result, 0);
+    }
 }
