@@ -1,5 +1,6 @@
 use std::cmp::min;
 
+#[allow(dead_code)]
 pub fn minimum_recolors(blocks: String, k: i32) -> i32 {
     let window_size = k as usize;
     let is_black: Vec<bool> = blocks.chars().map(|c| c == 'B').collect();
