@@ -1,21 +1,22 @@
+use std::cmp::min;
+
 pub fn minimum_recolors(blocks: String, k: i32) -> i32 {
-    let k = k as usize;
+    let window_size = k as usize;
     let is_black: Vec<bool> = blocks
       .chars()
       .map(|c| c == 'B')
       .collect();
-    let mut current = k - is_black[0..k].iter().filter(|&&x| x).count();
-    let mut best = current;
-    for i in k..is_black.len() {
-        if is_black[i - k] {
-            current += 1;
+    let mut black_count = is_black[0..window_size].iter().filter(|&&x| x).count();
+    let mut min_recolors = window_size - black_count;
+    for i in window_size..is_black.len() {
+        if is_black[i - window_size] {
+          black_count -= 1;
         }
         if is_black[i] {
-            current -= 1;
+          black_count += 1;
         }
-        if current < best {
-            best = current;
-        }
+        let recolors = window_size - black_count;
+        min_recolors = min(min_recolors, recolors);
     }
-    best as i32
+    min_recolors as i32
 }
