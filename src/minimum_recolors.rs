@@ -18,3 +18,16 @@ pub fn minimum_recolors(blocks: String, k: i32) -> i32 {
     }
     min_recolors as i32
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_a() {
+      let blocks = "WBBWWBBWBW".to_string();
+      let k = 7;
+      let result = minimum_recolors(blocks, k);
+      assert_eq!(result, 3);
+    }
+}
