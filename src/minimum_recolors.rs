@@ -26,17 +26,17 @@ mod tests {
 
     #[test]
     fn test_a() {
-      let blocks = "WBBWWBBWBW".to_string();
-      let k = 7;
-      let result = minimum_recolors(blocks, k);
-      assert_eq!(result, 3);
+        let blocks = "WBBWWBBWBW".to_string();
+        let k = 7;
+        let result = minimum_recolors(blocks, k);
+        assert_eq!(result, 3);
     }
 
     #[test]
     fn test_b() {
-      let blocks = "WBWBBBW".to_string();
-      let k = 2;
-      let result = minimum_recolors(blocks, k);
-      assert_eq!(result, 0);
+        let blocks = "WBWBBBW".to_string();
+        let k = 2;
+        let result = minimum_recolors(blocks, k);
+        assert_eq!(result, 0);
     }
 }

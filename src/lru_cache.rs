@@ -1,6 +1,6 @@
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use std::cell::RefCell;
 
 type NodeRefCell = Rc<RefCell<Node>>;
 
@@ -16,7 +16,12 @@ struct Node {
 #[allow(dead_code)]
 impl Node {
     fn new(key: i32, value: i32) -> Node {
-        Node { key, value, prev: None, next: None }
+        Node {
+            key,
+            value,
+            prev: None,
+            next: None,
+        }
     }
 
     fn update_prev_next(self: &mut Self, prev: Option<NodeRefCell>, next: Option<NodeRefCell>) {
@@ -25,11 +30,7 @@ impl Node {
     }
 
     fn to_reference(self: Self) -> NodeRefCell {
-        Rc::new(
-            RefCell::new(
-                self
-            )
-        )
+        Rc::new(RefCell::new(self))
     }
 
     fn connect(prev: &NodeRefCell, next: &NodeRefCell) {
@@ -48,16 +49,15 @@ struct LRUCache {
 
 #[allow(dead_code)]
 impl LRUCache {
-
     fn new(capacity: i32) -> Self {
         LRUCache {
             capacity: capacity as usize,
             head: None,
             tail: None,
-            map: HashMap::with_capacity(capacity as usize)
+            map: HashMap::with_capacity(capacity as usize),
         }
     }
-    
+
     fn get(&mut self, key: i32) -> i32 {
         let existing = self.map.get(&key).and_then(|x| Some(Rc::clone(x)));
         if let Some(node) = existing {
@@ -85,7 +85,7 @@ impl LRUCache {
             return;
         }
         if let Some(prev) = RefCell::borrow(&node).prev.clone() {
-            Node::connect(&prev, &next);            
+            Node::connect(&prev, &next);
         } else {
             // In this case the Node was a head
             self.head = Some(next.clone());
@@ -95,7 +95,7 @@ impl LRUCache {
         RefCell::borrow_mut(&node).next = None;
         self.tail = Some(node);
     }
-    
+
     fn put(&mut self, key: i32, value: i32) {
         let existing = self.map.get(&key).and_then(|x| Some(Rc::clone(x)));
         match existing {
@@ -114,7 +114,7 @@ impl LRUCache {
                         self.map.remove(&key_to_remove);
                         let head_next = RefCell::borrow(&head).next.clone().unwrap();
                         RefCell::borrow_mut(&head_next).prev = None;
-                        self.head = Some(head_next);                        
+                        self.head = Some(head_next);
                     }
                 }
                 if let Some(tail) = self.tail.clone() {
@@ -126,11 +126,11 @@ impl LRUCache {
                     self.tail = Some(new_node.clone());
                 }
                 self.map.insert(key, new_node);
-            },
+            }
             Some(node) => {
                 RefCell::borrow_mut(&node).value = value;
                 self.move_to_tail(&key, node);
-            },
+            }
         }
     }
 }
@@ -141,16 +141,16 @@ mod tests {
 
     #[test]
     fn test_a() {
-      let capacity = 2;
-      let mut cache = LRUCache::new(capacity);
-      cache.put(1, 1);
-      cache.put(2, 2);
-      assert_eq!(cache.get(1), 1);
-      cache.put(3, 3);
-      assert_eq!(cache.get(2), -1);
-      cache.put(4, 4);
-      assert_eq!(cache.get(1), -1);
-      assert_eq!(cache.get(3), 3);
-      assert_eq!(cache.get(4), 4);
+        let capacity = 2;
+        let mut cache = LRUCache::new(capacity);
+        cache.put(1, 1);
+        cache.put(2, 2);
+        assert_eq!(cache.get(1), 1);
+        cache.put(3, 3);
+        assert_eq!(cache.get(2), -1);
+        cache.put(4, 4);
+        assert_eq!(cache.get(1), -1);
+        assert_eq!(cache.get(3), 3);
+        assert_eq!(cache.get(4), 4);
     }
 }
