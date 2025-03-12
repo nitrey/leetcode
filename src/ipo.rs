@@ -7,6 +7,7 @@ struct Project {
     profit: i32,
 }
 
+#[allow(dead_code)]
 pub fn find_maximized_capital(k: i32, w: i32, profits: Vec<i32>, capital: Vec<i32>) -> i32 {
   let mut projects: Vec<Project> = capital
       .into_iter()
@@ -30,4 +31,19 @@ pub fn find_maximized_capital(k: i32, w: i32, profits: Vec<i32>, capital: Vec<i3
   }
 
   total_profit
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_a() {
+      let k = 2;
+      let w = 0;
+      let profits = vec![1, 2, 3];
+      let capital = vec![0, 1, 1];
+      let result = find_maximized_capital(k, w, profits, capital);
+      assert_eq!(result, 4);
+    }
 }
