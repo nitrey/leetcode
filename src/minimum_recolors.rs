@@ -1,5 +1,6 @@
 use std::cmp::min;
 
+// https://leetcode.com/problems/minimum-recolors-to-get-k-consecutive-black-blocks/description/
 #[allow(dead_code)]
 pub fn minimum_recolors(blocks: String, k: i32) -> i32 {
     let window_size = k as usize;
