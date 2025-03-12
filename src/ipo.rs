@@ -46,4 +46,14 @@ mod tests {
       let result = find_maximized_capital(k, w, profits, capital);
       assert_eq!(result, 4);
     }
+
+    #[test]
+    fn test_b() {
+      let k = 3;
+      let w = 0;
+      let profits = vec![1, 2, 3];
+      let capital = vec![0, 1, 2];
+      let result = find_maximized_capital(k, w, profits, capital);
+      assert_eq!(result, 6);
+    }
 }
